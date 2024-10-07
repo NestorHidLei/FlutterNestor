@@ -14,14 +14,14 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.teal,
           title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
          drawer: const MenuLateral(),
         body: Center(
           child: Text(
             'Relacion Ejercicios 1',
-            style: GoogleFonts.adamina(
+            style: GoogleFonts.sigmar(
               fontSize: 30,
             ),
           ),
