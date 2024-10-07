@@ -17,12 +17,26 @@ class MainApp extends StatelessWidget {
           backgroundColor: Colors.teal,
           title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
-         drawer: const MenuLateral(),
-        body: Center(
-          child: Text(
-            'Relacion Ejercicios 1',
-            style: GoogleFonts.sigmar(
-              fontSize: 30,
+        drawer: const MenuLateral(),
+        body: Container(
+          // Utiliza un Container para el fondo
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.teal, // Color inicial del degradado
+                Colors.lightGreen, // Color final del degradado
+              ],
+              begin: Alignment.topLeft, // Dirección del degradado
+              end: Alignment.bottomRight, // Dirección del degradado
+            ),
+          ),
+          child: Center(
+            child: Text(
+              'Relacion Ejercicios 1',
+              style: GoogleFonts.sigmar(
+                fontSize: 30,
+                color: Colors.white, // Cambia el color del texto para mejor contraste
+              ),
             ),
           ),
         ),
@@ -30,4 +44,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

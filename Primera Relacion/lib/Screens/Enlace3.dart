@@ -34,7 +34,7 @@ class Enlace3 extends StatelessWidget {
               const SizedBox(width: 2), // Espacio horizontal entre imágenes
               // Imagen 2
               Image.network(
-                'https://es.web.img3.acsta.net/pictures/18/04/04/22/52/3191575.jpg',
+                'https://m.media-amazon.com/images/M/MV5BMzU5ZGYzNmQtMTdhYy00OGRiLTg0NmQtYjVjNzliZTg1ZGE4XkEyXkFqcGc@._V1_.jpg',
                 height: 125,  // Ajustar el tamaño
                 width: 125,   // Ajustar el tamaño
               ),

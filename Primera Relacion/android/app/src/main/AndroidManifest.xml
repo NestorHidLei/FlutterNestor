@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="flutter_application_2"
+        android:label="Primera relación"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/walter">
         <activity
             android:name=".MainActivity"
             android:exported="true"
