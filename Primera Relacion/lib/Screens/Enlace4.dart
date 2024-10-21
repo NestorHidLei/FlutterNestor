@@ -11,7 +11,7 @@ class Enlace4 extends StatelessWidget {
           title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.teal,  // Color de inicio del degradado
@@ -21,7 +21,7 @@ class Enlace4 extends StatelessWidget {
             end: Alignment.bottomRight, // Termina en la esquina inferior derecha
           ),
         ),
-        child: Center(
+        child: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -31,28 +31,28 @@ class Enlace4 extends StatelessWidget {
                 size: 50,
                 color: Colors.white,
               ),
-              const SizedBox(width: 20), // Espacio horizontal entre iconos
+              SizedBox(width: 20), // Espacio horizontal entre iconos
               // Icono 2
               Icon(
                 Icons.favorite,
                 size: 50,
                 color: Colors.white,
               ),
-              const SizedBox(width: 20), // Espacio horizontal entre iconos
+              SizedBox(width: 20), // Espacio horizontal entre iconos
               // Icono 3
               Icon(
                 Icons.settings,
                 size: 50,
                 color: Colors.white,
               ),
-              const SizedBox(width: 20), // Espacio horizontal entre iconos
+              SizedBox(width: 20), // Espacio horizontal entre iconos
               // Icono 4
               Icon(
                 Icons.share,
                 size: 50,
                 color: Colors.white,
               ),
-              const SizedBox(width: 20), // Espacio horizontal entre iconos
+              SizedBox(width: 20), // Espacio horizontal entre iconos
               // Icono 5
               Icon(
                 Icons.info,

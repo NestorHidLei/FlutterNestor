@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
         drawer: const MenuLateral(),
         body: Container(
           // Utiliza un Container para el fondo
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Colors.teal, // Color inicial del degradado

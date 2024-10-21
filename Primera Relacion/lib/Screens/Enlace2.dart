@@ -11,7 +11,7 @@ class Enlace2 extends StatelessWidget {
           title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Colors.teal,  // Color de inicio del degradado

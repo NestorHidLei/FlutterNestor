@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/ContadorApp.dart';
 import 'package:flutter_application_2/Screens/Enlace4.dart';
+import 'package:flutter_application_2/Screens/filas_columnas.dart';
+import 'package:flutter_application_2/Screens/instagram.dart';
 import 'Enlace1.dart';
 import 'Enlace2.dart';
 import 'Enlace3.dart';
@@ -78,10 +81,36 @@ class MenuLateral extends StatelessWidget {
                   builder: (BuildContext context) => const Enlace4()));
             },
           ),
+          ListTile(
+            title: const Text("Instagram"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const InstagramProfileClone()));
+            },
+          ),
+          ListTile(
+            title: const Text("Filas y Columnas"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const FilasColumnas()));
+            },
+          ),
+          ListTile(
+            title: const Text("Contador"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const ContadorApp()));
+            },
+          ),
         ],
       ),
     );
   }
 }
+
+
 
 

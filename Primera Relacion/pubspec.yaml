@@ -20,3 +20,18 @@ flutter:
   uses-material-design: true
   assets:
   - 'assets/images/walter.jpg'
+  - 'assets/images/kirbi.jpg'
+  - 'assets/images/familia.jpeg'
+  - 'assets/images/amigos.jpg'
+  - 'assets/images/trabajo.jpg'
+  - 'assets/images/viajes.jpg'
+  - 'assets/images/sumar.png'
+  - 'assets/images/niñoWither1.png'
+  - 'assets/images/niñoWither2.png'
+  - 'assets/images/niñoWither3.png'
+  - 'assets/images/niñoWither4.png'
+  - 'assets/images/niñoWither5.png'
+  - 'assets/images/niñoWither6.png'
+  - 'assets/images/niñoWither7.png'
+  - 'assets/images/niñoWither8.png'
+  - 'assets/images/niñoWither9.png'

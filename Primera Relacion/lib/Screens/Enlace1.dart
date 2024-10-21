@@ -15,7 +15,7 @@ class Enlace1 extends StatelessWidget {
         ),
         drawer: const MenuLateral(),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
                 Colors.teal, // Color inicial del degradado
