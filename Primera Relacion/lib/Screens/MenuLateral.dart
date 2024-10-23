@@ -86,7 +86,7 @@ class MenuLateral extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const InstagramProfileClone()));
+                  builder: (BuildContext context) => ProfilePage()));
             },
           ),
           ListTile(
@@ -102,7 +102,7 @@ class MenuLateral extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const ContadorApp()));
+                  builder: (BuildContext context) => const ContadorPage()));
             },
           ),
         ],

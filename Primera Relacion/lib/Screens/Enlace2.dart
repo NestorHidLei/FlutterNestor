@@ -14,11 +14,11 @@ class Enlace2 extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.teal,  // Color de inicio del degradado
-              Colors.lightGreen, // Color final del degradado
+              Colors.teal,  
+              Colors.lightGreen, 
             ],
-            begin: Alignment.topLeft, // Comienza desde la esquina superior izquierda
-            end: Alignment.bottomRight, // Termina en la esquina inferior derecha
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight, 
           ),
         ),
         child: Center(

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const FilasColumnas());
-}
-
 class FilasColumnas extends StatelessWidget {
   const FilasColumnas({super.key});
 
@@ -12,7 +8,7 @@ class FilasColumnas extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Ejemplo de filas y columnas anidadas'),
+          title: const Text('Ejemplo de filas y columnas'),
         ),
         body: const Padding(
           padding: EdgeInsets.all(20.0),
