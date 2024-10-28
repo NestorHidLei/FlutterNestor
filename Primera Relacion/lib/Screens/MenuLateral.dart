@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Screens/ContadorApp.dart';
 import 'package:flutter_application_2/Screens/Enlace4.dart';
+import 'package:flutter_application_2/Screens/Enlace5.dart';
+import 'package:flutter_application_2/Screens/Piramide';
 import 'package:flutter_application_2/Screens/filas_columnas.dart';
 import 'package:flutter_application_2/Screens/instagram.dart';
 import 'Enlace1.dart';
@@ -82,6 +84,30 @@ class MenuLateral extends StatelessWidget {
             },
           ),
           ListTile(
+            title: const Text("Enlace 5"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const Enlace5()));
+            },
+          ),
+          ListTile(
+            title: const Text("Piramide"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => MyApp()));
+            },
+          ),
+          ListTile(
+            title: const Text("Contador"),
+            onTap: () {
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const ContadorPage()));
+            },
+          ),
+          ListTile(
             title: const Text("Instagram"),
             onTap: () {
               Navigator.of(context).pop();
@@ -97,14 +123,7 @@ class MenuLateral extends StatelessWidget {
                   builder: (BuildContext context) => const FilasColumnas()));
             },
           ),
-          ListTile(
-            title: const Text("Contador"),
-            onTap: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const ContadorPage()));
-            },
-          ),
+          
         ],
       ),
     );
