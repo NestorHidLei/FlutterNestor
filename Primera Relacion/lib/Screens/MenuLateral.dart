@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Screens/ContadorApp.dart';
 import 'package:flutter_application_2/Screens/Enlace4.dart';
 import 'package:flutter_application_2/Screens/Enlace5.dart';
-import 'package:flutter_application_2/Screens/Piramide';
+import 'package:flutter_application_2/Screens/Enlace9.dart';
+import 'package:flutter_application_2/Screens/Piramide.dart';
 import 'package:flutter_application_2/Screens/filas_columnas.dart';
 import 'package:flutter_application_2/Screens/instagram.dart';
 import 'Enlace1.dart';
@@ -45,91 +46,99 @@ class MenuLateral extends StatelessWidget {
               ),
             ],
           ),
-          Ink(
-            color: Colors.green,
-            child: ListTile(
-              title: const Text(
-                "Enlace 1",
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => const Enlace1()));
-              },
-            ),
+          // Enlace 1
+          ListTile(
+            title: const Text("Enlace 1", style: TextStyle(color: Colors.white)),
+            tileColor: Colors.green,
+            onTap: () {
+              Navigator.of(context).pop(); // Cierra el Drawer
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const Enlace1())); // Navega a Enlace1
+            },
           ),
+          // Enlace 2
           ListTile(
             title: const Text("Enlace 2"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace2()));
+                  builder: (BuildContext context) => const Enlace2())); // Navega a Enlace2
             },
           ),
+          // Enlace 3
           ListTile(
             title: const Text("Enlace 3"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace3()));
+                  builder: (BuildContext context) => const Enlace3())); // Navega a Enlace3
             },
           ),
+          // Enlace 4
           ListTile(
             title: const Text("Enlace 4"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace4()));
+                  builder: (BuildContext context) => const Enlace4())); // Navega a Enlace4
             },
           ),
+          // Enlace 5
           ListTile(
             title: const Text("Enlace 5"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace5()));
+                  builder: (BuildContext context) => const Enlace5())); // Navega a Enlace5
             },
           ),
+          // Pirámide
           ListTile(
             title: const Text("Piramide"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => MyApp()));
+                  builder: (BuildContext context) => Piramide())); // Navega a Piramide
             },
           ),
+          // Contador
           ListTile(
             title: const Text("Contador"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const ContadorPage()));
+                  builder: (BuildContext context) => const ContadorPage())); // Navega a ContadorPage
             },
           ),
+          // Instagram
           ListTile(
             title: const Text("Instagram"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ProfilePage()));
+                  builder: (BuildContext context) => ProfilePage())); // Navega a ProfilePage
             },
           ),
+          // Filas y Columnas
           ListTile(
             title: const Text("Filas y Columnas"),
             onTap: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const FilasColumnas()));
+                  builder: (BuildContext context) => const FilasColumnas())); // Navega a FilasColumnas
             },
           ),
-          
+          // Juego de clicks
+          ListTile(
+            title: const Text("Juego de clicks"),
+            onTap: () {
+              Navigator.of(context).pop(); // Cierra el Drawer
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const Enlace9())); // Navega a Enlace9
+            },
+          ),
         ],
       ),
     );
   }
 }
-
-
-
-
