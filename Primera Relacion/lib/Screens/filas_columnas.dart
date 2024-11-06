@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
 class FilasColumnas extends StatelessWidget {
   const FilasColumnas({super.key});
@@ -10,6 +11,8 @@ class FilasColumnas extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Ejemplo de filas y columnas'),
         ),
+        drawer: const MenuLateral(),
+
         body: const Padding(
           padding: EdgeInsets.all(20.0),
           child: Column(

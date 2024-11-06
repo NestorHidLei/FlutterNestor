@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Screens/ContadorApp.dart';
-import 'package:flutter_application_2/Screens/Enlace4.dart';
-import 'package:flutter_application_2/Screens/Enlace5.dart';
-import 'package:flutter_application_2/Screens/Enlace9.dart';
-import 'package:flutter_application_2/Screens/Piramide.dart';
-import 'package:flutter_application_2/Screens/filas_columnas.dart';
-import 'package:flutter_application_2/Screens/instagram.dart';
-import 'Enlace1.dart';
-import 'Enlace2.dart';
-import 'Enlace3.dart';
+import 'package:flutter_application_2/Screens/screens.dart';
 
 class MenuLateral extends StatelessWidget {
   const MenuLateral({super.key});

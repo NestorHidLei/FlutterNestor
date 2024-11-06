@@ -5,7 +5,7 @@
         android:label="Primera relación"
         android:name="${applicationName}"
         android:icon="@mipmap/walter"
-        android:enableOnBackInvokedCallback="false"> <!-- Aquí añadimos el atributo -->
+        android:enableOnBackInvokedCallback="true"> 
 
         <activity
             android:name=".MainActivity"

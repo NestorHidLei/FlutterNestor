@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/material.dart';
 
-void main() {
-  runApp(Enlace9());
-}
+import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
 class Enlace9 extends StatelessWidget {
   const Enlace9({super.key});
@@ -16,12 +14,14 @@ class Enlace9 extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ClickGame(),
+      home: const ClickGame(),
     );
   }
 }
 
 class ClickGame extends StatefulWidget {
+  const ClickGame({super.key});
+
   @override
   _ClickGameState createState() => _ClickGameState();
 }
@@ -32,12 +32,26 @@ class _ClickGameState extends State<ClickGame> {
   double imageX = 0;
   double imageY = 0;
   Timer? timer;
-  int timeLeft = 3; // Tiempo en segundos para hacer clic en la imagen
+  int timeLeft = 3;
+  String currentImage = 'assets/images/kirbi.jpg'; // Imagen inicial
+
+  // Lista de rutas de imágenes
+  final List<String> images = [
+    'assets/images/imagen1.jfif',
+    'assets/images/imagen2.jfif',
+    'assets/images/imagen3.jfif',
+    'assets/images/imagen4.jfif',
+    'assets/images/imagen5.jfif',
+    'assets/images/imagen6.jfif',
+    'assets/images/imagen7.jfif',
+    'assets/images/imagen8.jfif',
+    'assets/images/imagen9.jfif',
+    'assets/images/imagen10.jfif',
+  ];
 
   @override
   void initState() {
     super.initState();
-    // Esperar a que el widget esté completamente montado para obtener las dimensiones
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startGame();
     });
@@ -49,7 +63,7 @@ class _ClickGameState extends State<ClickGame> {
   }
 
   void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       if (timeLeft > 0) {
         setState(() {
           timeLeft -= 1;
@@ -63,10 +77,13 @@ class _ClickGameState extends State<ClickGame> {
 
   void generateRandomPosition() {
     setState(() {
-      // Generar una posición aleatoria para la imagen una vez que las dimensiones son accesibles
+      // Cambia la posición de la imagen
       imageX = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
       imageY = random.nextDouble() * (MediaQuery.of(context).size.height - 100);
-      timeLeft = 3; // Reiniciar el tiempo para cada nueva imagen
+      timeLeft = 3; // Reinicia el tiempo para cada nueva imagen
+
+      // Selecciona una imagen aleatoria de la lista
+      currentImage = images[random.nextInt(images.length)];
     });
   }
 
@@ -95,43 +112,46 @@ class _ClickGameState extends State<ClickGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Juego de Clics'),
-      ),
-      body: Stack(
-        children: [
-          Positioned(
-            left: imageX,
-            top: imageY,
-            child: GestureDetector(
-              onTap: clickedImage,
-              child: Image.asset(
-                'assets/image.png', // Coloca aquí la ruta de tu imagen en assets
-                width: 100,
-                height: 100,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Juego de Clics'),
+        ),
+        drawer: const MenuLateral(),
+        body: Stack(
+          children: [
+            Positioned(
+              left: imageX,
+              top: imageY,
+              child: GestureDetector(
+                onTap: clickedImage,
+                child: Image.asset(
+                  currentImage,
+                  width: 100,
+                  height: 100,
+                ),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Text(
-                    'Puntaje: $score',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  Text(
-                    'Tiempo restante: $timeLeft',
-                    style: TextStyle(fontSize: 18, color: Colors.red),
-                  ),
-                ],
+            Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'Puntaje: $score',
+                      style: const TextStyle(fontSize: 24),
+                    ),
+                    Text(
+                      'Tiempo restante: $timeLeft',
+                      style: const TextStyle(fontSize: 18, color: Colors.red),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

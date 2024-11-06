@@ -1,0 +1,10 @@
+export 'ContadorApp.dart';
+export 'Enlace1.dart';
+export 'Enlace2.dart';
+export 'Enlace3.dart';
+export 'Enlace4.dart';
+export 'Enlace5.dart';
+export 'Enlace9.dart';
+export 'Piramide.dart';
+export 'filas_columnas.dart';
+export 'instagram.dart';

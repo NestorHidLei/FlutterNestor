@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
 void main() {
   runApp(const ContadorApp());
@@ -52,11 +53,13 @@ class _ContadorPageState extends State<ContadorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+    home: Scaffold(
       appBar: AppBar(
         title: const Text('Contador de Clicks'),
         centerTitle: true,
       ),
+      drawer: const MenuLateral(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,6 +110,7 @@ class _ContadorPageState extends State<ContadorPage> {
           ],
         ),
       ),
+    ),
     );
   }
 }

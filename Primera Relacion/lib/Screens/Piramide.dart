@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(Piramide());
-}
+import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
 class Piramide extends StatelessWidget {
   @override
@@ -12,6 +9,7 @@ class Piramide extends StatelessWidget {
         appBar: AppBar(
           title: Text('Ejemplo de filas y columnas anidadas'),
         ),
+      drawer: const MenuLateral(),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
 class Enlace4 extends StatelessWidget {
   const Enlace4({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+    home: Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.teal,
           title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
+      drawer: const MenuLateral(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -63,6 +66,7 @@ class Enlace4 extends StatelessWidget {
           ),
         ),
       ),
+    )
     );
   }
 }
