@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/instagram.dart';
 import 'package:flutter_application_2/Screens/screens.dart';
 
 class MenuLateral extends StatelessWidget {
@@ -107,7 +108,7 @@ class MenuLateral extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ProfilePage())); // Navega a ProfilePage
+                  builder: (BuildContext context) => InstagramProfileClone())); // Navega a ProfilePage
             },
           ),
           // Filas y Columnas

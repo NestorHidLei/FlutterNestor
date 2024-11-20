@@ -7,4 +7,3 @@ export 'Enlace5.dart';
 export 'Enlace9.dart';
 export 'Piramide.dart';
 export 'filas_columnas.dart';
-export 'instagram.dart';

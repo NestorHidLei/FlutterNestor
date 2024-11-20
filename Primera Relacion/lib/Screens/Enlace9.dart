@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
@@ -34,6 +33,7 @@ class _ClickGameState extends State<ClickGame> {
   Timer? timer;
   int timeLeft = 3;
   String currentImage = 'assets/images/kirbi.jpg'; // Imagen inicial
+  String message = ''; // Mensaje para mostrar al usuario
 
   // Lista de rutas de imágenes
   final List<String> images = [
@@ -60,6 +60,9 @@ class _ClickGameState extends State<ClickGame> {
   void startGame() {
     generateRandomPosition();
     startTimer();
+    setState(() {
+      message = ''; // Asegúrate de que no haya mensaje al inicio
+    });
   }
 
   void startTimer() {
@@ -91,6 +94,7 @@ class _ClickGameState extends State<ClickGame> {
     timer?.cancel();
     setState(() {
       score += 1;
+      message = '¡Bien Hecho!'; // Mostrar mensaje cuando se hace clic
     });
     generateRandomPosition();
     startTimer();
@@ -99,6 +103,7 @@ class _ClickGameState extends State<ClickGame> {
   void missedImage() {
     setState(() {
       score -= 2;
+      message = '¡Perdido!'; // Mostrar mensaje cuando no se hace clic
     });
     generateRandomPosition();
     startTimer();
@@ -146,6 +151,14 @@ class _ClickGameState extends State<ClickGame> {
                       'Tiempo restante: $timeLeft',
                       style: const TextStyle(fontSize: 18, color: Colors.red),
                     ),
+                    if (message.isNotEmpty) // Mostrar mensaje solo si no está vacío
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          message,
+                          style: const TextStyle(fontSize: 20, color: Colors.green),
+                        ),
+                      ),
                   ],
                 ),
               ),

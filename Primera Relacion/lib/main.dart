@@ -23,11 +23,11 @@ class MainApp extends StatelessWidget {
           decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                Colors.teal, // Color inicial del degradado
-                Colors.lightGreen, // Color final del degradado
+                Colors.teal,
+                Colors.lightGreen, 
               ],
-              begin: Alignment.topLeft, // Dirección del degradado
-              end: Alignment.bottomRight, // Dirección del degradado
+              begin: Alignment.topLeft, 
+              end: Alignment.bottomRight, 
             ),
           ),
           child: Center(
@@ -35,7 +35,7 @@ class MainApp extends StatelessWidget {
               'Relacion Ejercicios 1',
               style: GoogleFonts.sigmar(
                 fontSize: 30,
-                color: Colors.white, // Cambia el color del texto para mejor contraste
+                color: Colors.white, 
               ),
             ),
           ),
