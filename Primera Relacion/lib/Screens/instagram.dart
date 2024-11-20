@@ -13,8 +13,21 @@ class InstagramProfileClone extends StatelessWidget {
   }
 }
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
+
+  @override
+  _ProfilePageState createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this); // Tres pestañas
+  }
 
   // Lista de pares (título, ruta de imagen) para las historias destacadas
   final List<Map<String, String>> highlightItems = [
@@ -136,12 +149,12 @@ class ProfilePage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 30,
-                            backgroundImage: AssetImage(highlightItems[index]["image"]!), // Imagen correspondiente
+                            backgroundImage: AssetImage(highlightItems[index]["image"]!),
                             backgroundColor: Colors.grey[300],
                           ),
                           const SizedBox(height: 5),
                           Text(
-                            highlightItems[index]["title"]!, // El texto debajo de la imagen
+                            highlightItems[index]["title"]!, 
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
@@ -152,52 +165,91 @@ class ProfilePage extends StatelessWidget {
               ),
               const Divider(),
 
-              // Aquí se reemplaza el Container con dos íconos
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      Icon(Icons.grid_on, size: 30),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Icon(Icons.person, size: 30),
-                    ],
-                  ),
+              // Agregar las pestañas
+              TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(icon: Icon(Icons.grid_on)),
+                  Tab(icon: Icon(Icons.movie_creation)), 
+                  Tab(icon: Icon(Icons.favorite_border)),
                 ],
               ),
 
-              const Divider(
-                thickness: 2,
-                indent: 20,
-                endIndent: 185,
-                color: Colors.black,
-              ),
-
-              const SizedBox(height: 10),
-
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 2,
-                ),
-                itemCount: imagePaths.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(imagePaths[index]), 
-                        fit: BoxFit.cover,
+              // Vista del contenido según la pestaña seleccionada
+              Container(
+                height: 400, 
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Pestaña 1: Publicaciones
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2,
                       ),
-                      color: Colors.grey[300],
+                      itemCount: imagePaths.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(imagePaths[index]), 
+                              fit: BoxFit.cover,
+                            ),
+                            color: Colors.grey[300],
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                    // Pestaña 2: Reels 
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3, 
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2,
+                      ),
+                      itemCount: reelsPaths.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          height: 900, 
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(reelsPaths[index]),
+                              fit: BoxFit.cover,
+                            ),
+                            color: Colors.grey[300],
+                          ),
+                        );
+                      },
+                    ),
+                    // Pestaña 3: Corazones (posts que diste like)
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 2,
+                        mainAxisSpacing: 2,
+                      ),
+                      itemCount: likedPosts.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(likedPosts[index]),
+                              fit: BoxFit.cover,
+                            ),
+                            color: Colors.grey[300],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -206,7 +258,7 @@ class ProfilePage extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home, color: Colors.black),
-              label: '', // Label se puede dejar vacío o personalizar
+              label: '',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.search, color: Colors.black),
@@ -222,15 +274,13 @@ class ProfilePage extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/kirbi.jpg'), // Cambia la ruta a tu imagen
+                backgroundImage: AssetImage('assets/images/kirbi.jpg'),
               ),
               label: '',
             ),
           ],
-          currentIndex: 0, // Índice del item seleccionado
-          onTap: (index) {
-            // Aquí puedes manejar el evento de selección de los ítems.
-          },
+          currentIndex: 0,
+          onTap: (index) {},
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.white,
         ),
@@ -249,6 +299,22 @@ class ProfilePage extends StatelessWidget {
     'assets/images/niñoWither7.png',
     'assets/images/niñoWither8.png',
     'assets/images/niñoWither9.png',
+  ];
+
+  // Lista de imágenes de los Reels
+  final List<String> reelsPaths = [
+    'assets/images/reel1.png',
+    'assets/images/reel2.png',
+    'assets/images/reel3.png',
+    'assets/images/reel4.png',
+  ];
+
+  // Lista de imágenes de los posts que se dieron like
+  final List<String> likedPosts = [
+    'assets/images/walter.jpg',
+    'assets/images/imagen1.jfif',
+    'assets/images/imagen6.jfif',
+    'assets/images/imagen7.jfif',
   ];
 
   Widget profileStats(String count, String label) {
