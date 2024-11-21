@@ -94,7 +94,7 @@ class _ClickGameState extends State<ClickGame> {
     timer?.cancel();
     setState(() {
       score += 1;
-      message = '¡Bien Hecho!'; // Mostrar mensaje cuando se hace clic
+      message = '¡Bien Hecho!'; 
     });
     generateRandomPosition();
     startTimer();
@@ -103,7 +103,7 @@ class _ClickGameState extends State<ClickGame> {
   void missedImage() {
     setState(() {
       score -= 2;
-      message = '¡Perdido!'; // Mostrar mensaje cuando no se hace clic
+      message = '¡Fallaste!';
     });
     generateRandomPosition();
     startTimer();

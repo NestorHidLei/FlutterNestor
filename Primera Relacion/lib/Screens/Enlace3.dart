@@ -6,11 +6,10 @@ class Enlace3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-    home: Scaffold(
+    return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.teal,
-          title: Center(child: Text("Relacion Ejercicios 1")),
+          title: const Center(child: Text("Relacion Ejercicios 1")),
         ),
       drawer: const MenuLateral(),
       body: Container(
@@ -52,7 +51,6 @@ class Enlace3 extends StatelessWidget {
           ),
         ),
       ),
-    ),
     );
   }
 }

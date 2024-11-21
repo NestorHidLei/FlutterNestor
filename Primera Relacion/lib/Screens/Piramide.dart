@@ -4,13 +4,12 @@ import 'package:flutter_application_2/Screens/MenuLateral.dart';
 class Piramide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
-          title: Text('Ejemplo de filas y columnas anidadas'),
+          title: const Text('Ejemplo de filas y columnas anidadas'),
         ),
       drawer: const MenuLateral(),
-        body: Center(
+        body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -48,15 +47,16 @@ class Piramide extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
 class CallIconWidget extends StatelessWidget {
+  const CallIconWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisSize: MainAxisSize.min, // Evita que el Column use más espacio del necesario
       children: [
         Icon(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_2/Screens/screens.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'Screens/MenuLateral.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,35 +12,38 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.teal,
-          title: const Center(child: Text("Relacion Ejercicios 1")),
+      title: 'Flutter App',  // Asegúrate de tener un título adecuado
+      theme: ThemeData(
+        primaryColor: Colors.teal,
+        scaffoldBackgroundColor: Colors.teal[50],
+        textTheme: TextTheme(
+          headlineLarge: GoogleFonts.sigmar(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal[800],
+          ),
+          bodyLarge: GoogleFonts.roboto(
+            fontSize: 16,
+            color: Colors.black87,
+          ),
+          bodyMedium: GoogleFonts.roboto(
+            fontSize: 14,
+            color: Colors.black54,
+          ),
         ),
-        drawer: const MenuLateral(),
-        body: Container(
-          // Utiliza un Container para el fondo
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.teal,
-                Colors.lightGreen, 
-              ],
-              begin: Alignment.topLeft, 
-              end: Alignment.bottomRight, 
-            ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.teal,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
-          child: Center(
-            child: Text(
-              'Relacion Ejercicios 1',
-              style: GoogleFonts.sigmar(
-                fontSize: 30,
-                color: Colors.white, 
-              ),
-            ),
-          ),
+          centerTitle: true,
         ),
       ),
+      initialRoute: AppRoutes.enlace1, // Asegúrate de que 'AppRoutes.enlace1' esté bien definido
+      onGenerateRoute: AppRoutes.generateRoute,  // Usa el generador de rutas que definimos
+      debugShowCheckedModeBanner: false,  // Opcional, para quitar la "debug banner"
     );
   }
 }

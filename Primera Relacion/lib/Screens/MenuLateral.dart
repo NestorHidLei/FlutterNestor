@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_2/Screens/instagram.dart';
 import 'package:flutter_application_2/Screens/screens.dart';
 
 class MenuLateral extends StatelessWidget {
@@ -44,8 +43,7 @@ class MenuLateral extends StatelessWidget {
             tileColor: Colors.green,
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace1())); // Navega a Enlace1
+              Navigator.pushNamed(context, AppRoutes.enlace1); // Usa la ruta de AppRoutes
             },
           ),
           // Enlace 2
@@ -53,8 +51,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Enlace 2"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace2())); // Navega a Enlace2
+              Navigator.pushNamed(context, AppRoutes.enlace2); // Usa la ruta de AppRoutes
             },
           ),
           // Enlace 3
@@ -62,8 +59,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Enlace 3"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace3())); // Navega a Enlace3
+              Navigator.pushNamed(context, AppRoutes.enlace3); // Usa la ruta de AppRoutes
             },
           ),
           // Enlace 4
@@ -71,8 +67,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Enlace 4"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace4())); // Navega a Enlace4
+              Navigator.pushNamed(context, AppRoutes.enlace4); // Usa la ruta de AppRoutes
             },
           ),
           // Enlace 5
@@ -80,8 +75,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Enlace 5"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace5())); // Navega a Enlace5
+              Navigator.pushNamed(context, AppRoutes.enlace5); // Usa la ruta de AppRoutes
             },
           ),
           // Pirámide
@@ -89,8 +83,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Piramide"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => Piramide())); // Navega a Piramide
+              Navigator.pushNamed(context, AppRoutes.piramide); // Usa la ruta de AppRoutes
             },
           ),
           // Contador
@@ -98,8 +91,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Contador"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const ContadorPage())); // Navega a ContadorPage
+              Navigator.pushNamed(context, AppRoutes.contadorApp); // Usa la ruta de AppRoutes
             },
           ),
           // Instagram
@@ -107,8 +99,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Instagram"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => InstagramProfileClone())); // Navega a ProfilePage
+              Navigator.pushNamed(context, AppRoutes.instagram); // Usa la ruta de AppRoutes
             },
           ),
           // Filas y Columnas
@@ -116,8 +107,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Filas y Columnas"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const FilasColumnas())); // Navega a FilasColumnas
+              Navigator.pushNamed(context, AppRoutes.filasColumnas); // Usa la ruta de AppRoutes
             },
           ),
           // Juego de clicks
@@ -125,8 +115,7 @@ class MenuLateral extends StatelessWidget {
             title: const Text("Juego de clicks"),
             onTap: () {
               Navigator.of(context).pop(); // Cierra el Drawer
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => const Enlace9())); // Navega a Enlace9
+              Navigator.pushNamed(context, AppRoutes.enlace9); // Usa la ruta de AppRoutes
             },
           ),
         ],

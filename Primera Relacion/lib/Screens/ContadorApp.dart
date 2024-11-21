@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
-void main() {
-  runApp(const ContadorApp());
-}
-
 class ContadorApp extends StatelessWidget {
   const ContadorApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Contador de Clicks',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contador de Clicks'),
       ),
-      home: const ContadorPage(),
+      drawer: const MenuLateral(),
+      body: const ContadorPage(), // Página del contador
     );
   }
 }
+
 
 class ContadorPage extends StatefulWidget {
   const ContadorPage({super.key});
