@@ -31,7 +31,6 @@ class _ClickGameState extends State<ClickGame> {
   Timer? timer;
   int timeLeft = 3;
   String currentImage = 'assets/images/kirbi.jpg'; // Imagen inicial
-  String message = ''; // Mensaje para mostrar al usuario
 
   // Lista de rutas de imágenes
   final List<String> images = [
@@ -58,9 +57,6 @@ class _ClickGameState extends State<ClickGame> {
   void startGame() {
     generateRandomPosition();
     startTimer();
-    setState(() {
-      message = ''; // Asegúrate de que no haya mensaje al inicio
-    });
   }
 
   void startTimer() {
@@ -97,19 +93,33 @@ class _ClickGameState extends State<ClickGame> {
     timer?.cancel();
     setState(() {
       score += 1;
-      message = '¡Bien Hecho!';
     });
     generateRandomPosition();
     startTimer();
+
+    // Verificar si el puntaje es múltiplo de 5
+    if (score % 5 == 0) {
+      // Mostrar Snackbar con mensaje "¡Bien Hecho!" solo si el puntaje es múltiplo de 5
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('¡Bien Hecho!')),
+      );
+    }
   }
 
   void missedImage() {
     setState(() {
       score -= 2;
-      message = '¡Fallaste!';
     });
     generateRandomPosition();
     startTimer();
+
+    // Verificar si el puntaje es múltiplo de 5 después de fallar
+    if (score % 5 == 0) {
+      // Mostrar Snackbar con mensaje "¡Fallaste!" solo si el puntaje es múltiplo de 5
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('¡Fallaste!')),
+      );
+    }
   }
 
   @override
@@ -128,7 +138,7 @@ class _ClickGameState extends State<ClickGame> {
       body: SafeArea( // Agregamos SafeArea para evitar que los elementos queden ocultos por el sistema de barras y muescas
         child: Column(
           children: [
-            // Este es el área fija para los textos de puntaje, tiempo y mensaje
+            // Este es el área fija para los textos de puntaje y tiempo
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -142,14 +152,6 @@ class _ClickGameState extends State<ClickGame> {
                     'Tiempo restante: $timeLeft',
                     style: const TextStyle(fontSize: 18, color: Colors.red),
                   ),
-                  if (message.isNotEmpty) // Mostrar mensaje solo si no está vacío
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        message,
-                        style: const TextStyle(fontSize: 20, color: Colors.green),
-                      ),
-                    ),
                 ],
               ),
             ),
