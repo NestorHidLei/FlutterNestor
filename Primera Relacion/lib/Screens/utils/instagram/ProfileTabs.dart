@@ -3,9 +3,18 @@ import 'package:flutter/material.dart';
 class ProfileTabs extends StatelessWidget {
   final TabController tabController;
 
-   ProfileTabs({super.key, required this.tabController});
+  ProfileTabs({super.key, required this.tabController});
 
   final List<String> imagePaths = [
+    'assets/images/niñoWither1.png',
+    'assets/images/niñoWither2.png',
+    'assets/images/niñoWither3.png',
+    'assets/images/niñoWither4.png',
+    'assets/images/niñoWither5.png',
+    'assets/images/niñoWither6.png',
+    'assets/images/niñoWither7.png',
+    'assets/images/niñoWither8.png',
+    'assets/images/niñoWither9.png',
     'assets/images/niñoWither1.png',
     'assets/images/niñoWither2.png',
     'assets/images/niñoWither3.png',
@@ -51,7 +60,7 @@ class ProfileTabs extends StatelessWidget {
               // Pestaña 1: Publicaciones
               GridView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(), // Permite desplazamiento
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 2,
@@ -73,7 +82,7 @@ class ProfileTabs extends StatelessWidget {
               // Pestaña 2: Reels
               GridView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(), // Permite desplazamiento
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 2,
@@ -95,7 +104,7 @@ class ProfileTabs extends StatelessWidget {
               // Pestaña 3: Posts liked
               GridView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(), // Permite desplazamiento
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 2,

@@ -12,7 +12,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',  // Asegúrate de tener un título adecuado
+      title: 'Flutter App',
       theme: ThemeData(
         primaryColor: Colors.teal,
         scaffoldBackgroundColor: Colors.teal[50],
@@ -41,9 +41,9 @@ class MainApp extends StatelessWidget {
           centerTitle: true,
         ),
       ),
-      initialRoute: AppRoutes.enlace1, // Asegúrate de que 'AppRoutes.enlace1' esté bien definido
-      onGenerateRoute: AppRoutes.generateRoute,  // Usa el generador de rutas que definimos
-      debugShowCheckedModeBanner: false,  // Opcional, para quitar la "debug banner"
+      initialRoute: AppRoutes.enlace1,
+      onGenerateRoute: AppRoutes.generateRoute,  
+      debugShowCheckedModeBanner: false, 
     );
   }
 }

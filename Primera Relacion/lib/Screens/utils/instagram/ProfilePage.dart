@@ -24,24 +24,6 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Néstor.hidlei',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.menu),
-            color: Colors.black,
-            onPressed: () {},
-          )
-        ],
-      ),
       drawer: const MenuLateral(),
       body: SingleChildScrollView(
         child: Column(

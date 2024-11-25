@@ -51,10 +51,6 @@ class _ContadorPageState extends State<ContadorPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
     home: Scaffold(
-      appBar: AppBar(
-        title: const Text('Contador de Clicks'),
-        centerTitle: true,
-      ),
       drawer: const MenuLateral(),
       body: Center(
         child: Column(

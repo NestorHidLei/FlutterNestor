@@ -3,18 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_2/Screens/MenuLateral.dart';
 
+void main() {
+  runApp(const Enlace9());
+}
+
 class Enlace9 extends StatelessWidget {
   const Enlace9({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Juego de Clics',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ClickGame(),
-    );
+    return const ClickGame();
   }
 }
 
@@ -81,8 +79,13 @@ class _ClickGameState extends State<ClickGame> {
   void generateRandomPosition() {
     setState(() {
       // Cambia la posición de la imagen
-      imageX = random.nextDouble() * (MediaQuery.of(context).size.width - 100);
-      imageY = random.nextDouble() * (MediaQuery.of(context).size.height - 100);
+      final screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
+
+      // Ajuste para evitar solaparse con el área de texto (considera una altura de 250 para evitar solapamientos)
+      imageX = random.nextDouble() * (screenWidth - 100);  // 100 es el ancho de la imagen
+      imageY = random.nextDouble() * (screenHeight - 300); // 300 es el espacio utilizado por el puntaje, tiempo y margen
+
       timeLeft = 3; // Reinicia el tiempo para cada nueva imagen
 
       // Selecciona una imagen aleatoria de la lista
@@ -94,7 +97,7 @@ class _ClickGameState extends State<ClickGame> {
     timer?.cancel();
     setState(() {
       score += 1;
-      message = '¡Bien Hecho!'; 
+      message = '¡Bien Hecho!';
     });
     generateRandomPosition();
     startTimer();
@@ -117,50 +120,57 @@ class _ClickGameState extends State<ClickGame> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Juego de Clics'),
-        ),
-        drawer: const MenuLateral(),
-        body: Stack(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Juego de Clics'),
+      ),
+      drawer: const MenuLateral(),
+      body: SafeArea( // Agregamos SafeArea para evitar que los elementos queden ocultos por el sistema de barras y muescas
+        child: Column(
           children: [
-            Positioned(
-              left: imageX,
-              top: imageY,
-              child: GestureDetector(
-                onTap: clickedImage,
-                child: Image.asset(
-                  currentImage,
-                  width: 100,
-                  height: 100,
-                ),
+            // Este es el área fija para los textos de puntaje, tiempo y mensaje
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Puntaje: $score',
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                  Text(
+                    'Tiempo restante: $timeLeft',
+                    style: const TextStyle(fontSize: 18, color: Colors.red),
+                  ),
+                  if (message.isNotEmpty) // Mostrar mensaje solo si no está vacío
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        message,
+                        style: const TextStyle(fontSize: 20, color: Colors.green),
+                      ),
+                    ),
+                ],
               ),
             ),
-            Align(
-              alignment: Alignment.topCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Puntaje: $score',
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                    Text(
-                      'Tiempo restante: $timeLeft',
-                      style: const TextStyle(fontSize: 18, color: Colors.red),
-                    ),
-                    if (message.isNotEmpty) // Mostrar mensaje solo si no está vacío
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          message,
-                          style: const TextStyle(fontSize: 20, color: Colors.green),
-                        ),
+            // Aquí usamos un Expanded para permitir que las imágenes aparezcan en el espacio restante
+            Expanded(
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: imageX,
+                    top: imageY,
+                    child: GestureDetector(
+                      onTap: clickedImage,
+                      child: Image.asset(
+                        currentImage,
+                        width: 100,
+                        height: 100,
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error, size: 100),
                       ),
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
