@@ -118,6 +118,13 @@ class MenuLateral extends StatelessWidget {
               Navigator.pushNamed(context, AppRoutes.enlace9); // Usa la ruta de AppRoutes
             },
           ),
+          ListTile(
+            title: const Text("Juego de cartas"),
+            onTap: () {
+              Navigator.of(context).pop(); // Cierra el Drawer
+              Navigator.pushNamed(context, AppRoutes.sieteYMedia); // Usa la ruta de AppRoutes
+            },
+          ),
         ],
       ),
     );

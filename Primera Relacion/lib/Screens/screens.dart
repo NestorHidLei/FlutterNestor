@@ -9,6 +9,7 @@ import 'package:flutter_application_2/Screens/Piramide.dart';
 import 'package:flutter_application_2/Screens/filas_columnas.dart';
 import 'package:flutter_application_2/Screens/instagram.dart';
 import 'package:flutter_application_2/Screens/ContadorApp.dart';
+import 'package:flutter_application_2/Screens/sieteYMedia.dart';
 
 class AppRoutes {
   static const String contadorApp = '/contadorApp';
@@ -21,6 +22,7 @@ class AppRoutes {
   static const String piramide = '/piramide';
   static const String filasColumnas = '/filasColumnas';
   static const String instagram = '/instagram';
+  static const String sieteYMedia = '/sieteYMedia';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -44,8 +46,11 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const FilasColumnas());
       case instagram:
         return MaterialPageRoute(builder: (_) => const InstagramProfileClone());
+      case sieteYMedia:
+        return MaterialPageRoute(builder: (_) => GameScreen());
       default:
         return MaterialPageRoute(builder: (_) => const ContadorApp());
     }
   }
 }
+
