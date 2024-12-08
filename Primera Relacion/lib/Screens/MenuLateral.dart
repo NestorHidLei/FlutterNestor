@@ -125,6 +125,13 @@ class MenuLateral extends StatelessWidget {
               Navigator.pushNamed(context, AppRoutes.sieteYMedia); // Usa la ruta de AppRoutes
             },
           ),
+          ListTile(
+            title: const Text("Formulario"),
+            onTap: () {
+              Navigator.of(context).pop(); // Cierra el Drawer
+              Navigator.pushNamed(context, AppRoutes.Formulario); // Usa la ruta de AppRoutes
+            },
+          ),
         ],
       ),
     );

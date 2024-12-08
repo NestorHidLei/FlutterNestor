@@ -10,6 +10,8 @@ import 'package:flutter_application_2/Screens/filas_columnas.dart';
 import 'package:flutter_application_2/Screens/instagram.dart';
 import 'package:flutter_application_2/Screens/ContadorApp.dart';
 import 'package:flutter_application_2/Screens/sieteYMedia.dart';
+import 'package:flutter_application_2/Screens/formulario.dart';
+
 
 class AppRoutes {
   static const String contadorApp = '/contadorApp';
@@ -23,6 +25,7 @@ class AppRoutes {
   static const String filasColumnas = '/filasColumnas';
   static const String instagram = '/instagram';
   static const String sieteYMedia = '/sieteYMedia';
+  static const String Formulario = '/FormularioPage';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -47,7 +50,9 @@ class AppRoutes {
       case instagram:
         return MaterialPageRoute(builder: (_) => const InstagramProfileClone());
       case sieteYMedia:
-        return MaterialPageRoute(builder: (_) => GameScreen());
+        return MaterialPageRoute(builder: (_) => const GameScreen());
+      case Formulario:
+        return MaterialPageRoute(builder: (_) => const FormularioPage());
       default:
         return MaterialPageRoute(builder: (_) => const ContadorApp());
     }

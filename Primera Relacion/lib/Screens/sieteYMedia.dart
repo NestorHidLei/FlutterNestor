@@ -143,6 +143,8 @@ class MyApp extends StatelessWidget {
 }
 
 class GameScreen extends StatefulWidget {
+  const GameScreen({super.key});
+
   @override
   _GameScreenState createState() => _GameScreenState();
 }
