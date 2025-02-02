@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class GameScreen extends StatefulWidget {
   final bool isSoloMode;
@@ -11,39 +13,29 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  // Frecuencia de letras
+  static const int boardSize = 9;
+  static const int playerTilesCount = 7;
+
   final Map<String, int> letterFrequency = {
-    'A': 12, 'E': 12, 'O': 9, 'S': 6, 'I': 6, 'U': 5, 'N': 5, 'R': 6, 'T': 4,
-    'D': 5, 'G': 2, 'L': 5,
-    'C': 4, 'M': 2, 'B': 2, 'P': 2,
-    'F': 1, 'H': 2, 'V': 1, 'Y': 1,
-    'Q': 1,
-    'J': 1, 'Ñ': 1, 'X': 1,
-    'K': 1, 'Z': 1,
+    'A': 9, 'B': 2, 'C': 2, 'D': 4, 'E': 12, 'F': 2, 'G': 3, 'H': 2, 'I': 9,
+    'J': 1, 'K': 1, 'L': 4, 'M': 2, 'N': 6, 'O': 8, 'P': 2, 'Q': 1, 'R': 6,
+    'S': 4, 'T': 6, 'U': 4, 'V': 2, 'W': 2, 'X': 1, 'Y': 2, 'Z': 1
   };
 
-  // Puntuación de las letras
   final Map<String, int> letterScores = {
-    'A': 1, 'E': 1, 'O': 1, 'S': 1, 'I': 1, 'U': 1, 'N': 1, 'R': 1, 'T': 1,
-    'D': 2, 'G': 2, 'L': 2,
-    'C': 3, 'M': 3, 'B': 3, 'P': 3,
-    'F': 4, 'H': 4, 'V': 4, 'Y': 4,
-    'Q': 5,
-    'J': 8, 'Ñ': 8, 'X': 8,
-    'K': 10, 'Z': 10,
+    'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1,
+    'J': 8, 'K': 5, 'L': 1, 'M': 3, 'N': 1, 'O': 1, 'P': 3, 'Q': 10, 'R': 1,
+    'S': 1, 'T': 1, 'U': 1, 'V': 4, 'W': 4, 'X': 8, 'Y': 4, 'Z': 10
   };
 
-  // Lista del tablero 15x15 con celdas vacías
-  List<String?> boardTiles = List<String?>.filled(15 * 15, null);
-
-  // Lista de fichas del jugador
+  List<String?> boardTiles = List<String?>.filled(boardSize * boardSize, null);
   List<String> playerTiles = [];
-
-  // Lista de fichas seleccionadas
-  Set<int> selectedTiles = {};
-
-  // Pool de letras
+  List<String> selectedTilesForWord = [];
   late List<String> letterPool;
+  String? draggableWord;
+  bool isHorizontal = true;
+  String? selectedBoardWord;
+  int? selectedBoardWordStartIndex;
 
   @override
   void initState() {
@@ -52,7 +44,6 @@ class _GameScreenState extends State<GameScreen> {
     _generateRandomTiles();
   }
 
-  // Inicializar el pool de letras según las frecuencias
   void _initializeLetterPool() {
     letterPool = [];
     letterFrequency.forEach((letter, count) {
@@ -61,29 +52,188 @@ class _GameScreenState extends State<GameScreen> {
     letterPool.shuffle(Random());
   }
 
-  // Generar fichas aleatorias para el jugador
   void _generateRandomTiles() {
     if (letterPool.isNotEmpty) {
-      final neededTiles = 7 - playerTiles.length; // Cuántas fichas se necesitan
+      final neededTiles = playerTilesCount - playerTiles.length;
       final newTiles = letterPool.take(neededTiles).toList();
       setState(() {
         playerTiles.addAll(newTiles);
         letterPool.removeRange(0, min(neededTiles, letterPool.length));
       });
+    } else {
+      _showErrorMessage('No hay más letras disponibles en el pool.');
     }
   }
 
-  // Descartar las fichas seleccionadas y generar nuevas
+  Future<bool> validateWord(String word) async {
+    try {
+      final response = await http.get(Uri.parse('https://api.dictionaryapi.dev/api/v2/entries/en/$word'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data is List && data.isNotEmpty;
+      }
+    } catch (e) {
+      debugPrint('Error al validar palabra: $e');
+    }
+    return false;
+  }
+
+  Future<void> tryPlaceWordOnBoard() async {
+    if (selectedTilesForWord.isEmpty) return;
+
+    String word = selectedTilesForWord.join();
+    bool isValid = await validateWord(word);
+
+    if (isValid) {
+      setState(() {
+        draggableWord = word;
+      });
+    } else {
+      _returnTilesToPlayer();
+      _showInvalidWordMessage(word);
+    }
+  }
+
+  void _placeWordOnBoard(int startIndex) {
+    if (draggableWord == null) return;
+
+    int wordLength = draggableWord!.length;
+    int row = startIndex ~/ boardSize;
+    int col = startIndex % boardSize;
+
+    if (isHorizontal ? col + wordLength > boardSize : row + wordLength > boardSize) {
+      _showInvalidPlacementMessage();
+      return;
+    }
+
+    setState(() {
+      for (int i = 0; i < wordLength; i++) {
+        int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
+        boardTiles[index] = draggableWord![i];
+      }
+      draggableWord = null;
+      _updatePlayerTiles();
+    });
+  }
+
+  void _selectWordOnBoard(int startIndex) {
+    int row = startIndex ~/ boardSize;
+    int col = startIndex % boardSize;
+
+    String horizontalWord = _getWordInDirection(row, col, 0, 1);
+    String verticalWord = _getWordInDirection(row, col, 1, 0);
+
+    if (horizontalWord.length > verticalWord.length) {
+      setState(() {
+        selectedBoardWord = horizontalWord;
+        selectedBoardWordStartIndex = row * boardSize + (col - (horizontalWord.length - 1));
+        isHorizontal = true;
+      });
+    } else {
+      setState(() {
+        selectedBoardWord = verticalWord;
+        selectedBoardWordStartIndex = (row - (verticalWord.length - 1)) * boardSize + col;
+        isHorizontal = false;
+      });
+    }
+  }
+
+  String _getWordInDirection(int row, int col, int rowIncrement, int colIncrement) {
+    String word = '';
+    int i = 0;
+    while (row >= 0 && row < boardSize && col >= 0 && col < boardSize && boardTiles[row * boardSize + col] != null) {
+      word = rowIncrement == 1 ? word + boardTiles[row * boardSize + col]! : boardTiles[row * boardSize + col]! + word;
+      row += rowIncrement;
+      col += colIncrement;
+    }
+    return word;
+  }
+
+  Future<void> _extendWordOnBoard({bool extendForward = true}) async {
+    if (selectedBoardWord == null || selectedBoardWordStartIndex == null || selectedTilesForWord.isEmpty) {
+      _showErrorMessage('Selecciona una palabra y letras para extender.');
+      return;
+    }
+
+    String newWord = extendForward ? selectedBoardWord! + selectedTilesForWord.join() : selectedTilesForWord.join() + selectedBoardWord!;
+    bool isValid = await validateWord(newWord);
+
+    if (!isValid) {
+      _showInvalidWordMessage(newWord);
+      return;
+    }
+
+    int startIndex = selectedBoardWordStartIndex!;
+    int wordLength = newWord.length;
+    int row = startIndex ~/ boardSize;
+    int col = startIndex % boardSize;
+
+    if (!extendForward) {
+      startIndex -= isHorizontal ? selectedTilesForWord.length : selectedTilesForWord.length * boardSize;
+    }
+
+    if (isHorizontal ? col + wordLength > boardSize || startIndex < 0 : row + wordLength > boardSize || startIndex < 0) {
+      _showInvalidPlacementMessage();
+      return;
+    }
+
+    setState(() {
+      for (int i = 0; i < wordLength; i++) {
+        int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
+        boardTiles[index] = newWord[i];
+      }
+      selectedBoardWord = null;
+      selectedBoardWordStartIndex = null;
+      _updatePlayerTiles();
+    });
+  }
+
+  void _updatePlayerTiles() {
+    playerTiles.removeWhere((tile) => selectedTilesForWord.contains(tile));
+    selectedTilesForWord.clear();
+    _generateRandomTiles();
+  }
+
+  void _returnTilesToPlayer() {
+    setState(() {
+      playerTiles.insertAll(0, selectedTilesForWord);
+      selectedTilesForWord.clear();
+    });
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void _showInvalidWordMessage(String word) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('"$word" no es una palabra válida.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void _showInvalidPlacementMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('No hay suficiente espacio para colocar la palabra.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
   void _discardSelectedTiles() {
     setState(() {
-      // Retener solo las fichas que no están seleccionadas y no están en el tablero
-      playerTiles = playerTiles
-          .asMap()
-          .entries
-          .where((entry) => !selectedTiles.contains(entry.key))
-          .map((entry) => entry.value)
-          .toList();
-      selectedTiles.clear();
+      letterPool.addAll(selectedTilesForWord);
+      playerTiles.removeWhere((tile) => selectedTilesForWord.contains(tile));
+      selectedTilesForWord.clear();
+      letterPool.shuffle(Random());
       _generateRandomTiles();
     });
   }
@@ -130,156 +280,206 @@ class _GameScreenState extends State<GameScreen> {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          // Tablero
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 15, // Número de columnas
+                  crossAxisCount: boardSize,
                   crossAxisSpacing: 2,
                   mainAxisSpacing: 2,
                 ),
-                itemCount: 15 * 15, // 15x15 casillas
+                itemCount: boardSize * boardSize,
                 itemBuilder: (context, index) {
-                  return DragTarget<String>(
-                    onAccept: (tile) {
-                      setState(() {
-                        boardTiles[index] = tile;
-                        playerTiles.remove(tile);
-                        selectedTiles.clear(); // Limpiar selección al mover
-                      });
-                    },
-                    builder: (context, candidateData, rejectedData) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: boardTiles[index] == null
-                              ? Colors.green[700]
-                              : Colors.brown[700],
-                          border: Border.all(color: Colors.black, width: 0.5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            boardTiles[index] ?? '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                  return GestureDetector(
+                    onTap: () => _selectWordOnBoard(index),
+                    child: DragTarget<String>(
+                      onAccept: (data) => _placeWordOnBoard(index),
+                      builder: (context, candidateData, rejectedData) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: boardTiles[index] == null
+                                ? const Color.fromARGB(255, 83, 146, 75)
+                                : Colors.brown[700],
+                            border: Border.all(color: Colors.black, width: 0.5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              boardTiles[index] ?? '',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   );
                 },
               ),
             ),
           ),
-          // Contenedor para las fichas
           Container(
             padding: const EdgeInsets.all(8.0),
             color: Colors.grey[400],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: playerTiles.asMap().entries.map((entry) {
-                final index = entry.key;
-                final tile = entry.value;
-
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      // Solo permitir seleccionar fichas no colocadas en el tablero
-                      if (!boardTiles.contains(tile)) {
-                        if (selectedTiles.contains(index)) {
-                          selectedTiles.remove(index);
-                        } else {
-                          selectedTiles.add(index);
-                        }
-                      }
-                    });
-                  },
-                  child: Draggable<String>(
-                    data: tile,
-                    feedback: Material(
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.brown[700],
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: Text(
-                            tile,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
+            child: Column(
+              children: [
+                if (selectedTilesForWord.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Wrap(
+                      spacing: 5,
+                      children: selectedTilesForWord.map((tile) {
+                        return Chip(
+                          label: Text(tile),
+                          onDeleted: () {
+                            setState(() {
+                              selectedTilesForWord.remove(tile);
+                              playerTiles.add(tile);
+                            });
+                          },
+                        );
+                      }).toList(),
                     ),
-                    childWhenDragging: const SizedBox.shrink(),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: selectedTiles.contains(index)
-                            ? Colors.red[700]
-                            : Colors.brown[700],
-                        borderRadius: BorderRadius.circular(5),
+                  ),
+                Wrap(
+                  spacing: 5,
+                  children: playerTiles.map((tile) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedTilesForWord.add(tile);
+                          playerTiles.remove(tile);
+                        });
+                      },
+                      child: Chip(
+                        label: Text(tile),
                       ),
-                      child: Stack(
+                    );
+                  }).toList(),
+                ),
+                if (draggableWord != null)
+                  Column(
+                    children: [
+                      Text(
+                        'Palabra: $draggableWord',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(
+                          const Text('Dirección:'),
+                          Switch(
+                            value: isHorizontal,
+                            onChanged: (value) {
+                              setState(() {
+                                isHorizontal = value;
+                              });
+                            },
+                          ),
+                          Text(isHorizontal ? 'Horizontal' : 'Vertical'),
+                        ],
+                      ),
+                      Draggable<String>(
+                        data: draggableWord,
+                        feedback: Material(
+                          child: Container(
+                            padding: const EdgeInsets.all(8.0),
+                            color: Colors.blue.withOpacity(0.5),
                             child: Text(
-                              tile,
+                              draggableWord!,
                               style: const TextStyle(
-                                color: Colors.white,
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          Positioned(
-                            bottom: 2,
-                            right: 2,
-                            child: Text(
-                              '${letterScores[tile]}', // Puntuación de la letra
-                              style: const TextStyle(
-                                color: Colors.yellow,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          color: Colors.blue,
+                          child: Text(
+                            draggableWord!,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                if (selectedBoardWord != null)
+                  Column(
+                    children: [
+                      Text(
+                        'Palabra seleccionada: $selectedBoardWord',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => _extendWordOnBoard(extendForward: true),
+                            child: const Text('Extender hacia adelante'),
+                          ),
+                          const SizedBox(width: 10),
+                          ElevatedButton(
+                            onPressed: () => _extendWordOnBoard(extendForward: false),
+                            child: const Text('Extender hacia atrás'),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-          ),
-          // Botón para descartar fichas seleccionadas
-          Container(
-            width: double.infinity,
-            color: Colors.grey[600],
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: selectedTiles.isNotEmpty ? _discardSelectedTiles : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[700],
-              ),
-              child: const Text(
-                'Descartar fichas seleccionadas',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                Container(
+                  width: double.infinity,
+                  color: Colors.grey[600],
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: selectedTilesForWord.isNotEmpty ? _discardSelectedTiles : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red[700],
+                        ),
+                        child: const Text(
+                          'Descartar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: selectedTilesForWord.isNotEmpty ? tryPlaceWordOnBoard : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue[700],
+                        ),
+                        child: const Text(
+                          'Validar y colocar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ],
