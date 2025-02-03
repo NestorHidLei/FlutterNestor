@@ -1,63 +1,66 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_flutter/screens/GameScreen.dart';
+import 'package:proyecto_flutter/screens/GameScreenDuel.dart';
 import 'package:proyecto_flutter/screens/login_page.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
+
+  // Función para cerrar sesión
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Redirigir al usuario a la página de inicio de sesión
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
+    } catch (e) {
+      print("Error al cerrar sesión: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-            icon: const Icon(Icons.logout),
-          ),
-        ],
-      ),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.red, Colors.blue],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          image: DecorationImage(
+            image: AssetImage('assets/images/background dashboard.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Column(
           children: [
             // Header
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-              child: const Row(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80.0, vertical: 40.0),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'USUARIO',
-                    style: TextStyle(
+                    '${user?.displayName ?? 'Invitado'}',
+                    style: const TextStyle(
                       fontSize: 24,
                       color: Colors.white,
                       fontFamily: 'Roboto',
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      size: 24.0,
-                      color: Colors.black,
+                  // Icono de cerrar sesión
+                  GestureDetector(
+                    onTap: () => _signOut(context),
+                    child: const CircleAvatar(
+                      radius: 20.0,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.logout,
+                        size: 24.0,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -66,23 +69,23 @@ class DashboardPage extends StatelessWidget {
             const Spacer(),
             // SOLO Button
             Transform.rotate(
-              angle: -0.1, 
+              angle: 0.45,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
-                     MaterialPageRoute(
-                     builder: (context) => const GameScreen(isSoloMode: true),
-                      ),
-                    );
-                  },
+                    MaterialPageRoute(
+                      builder: (context) => const GameScreen(isSoloMode: true),
+                    ),
+                  );
+                },
                 child: Container(
                   margin: const EdgeInsets.symmetric(vertical: 10.0),
                   width: 250,
                   height: 60,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Colors.brown[900],
+                    color: const Color.fromARGB(255, 107, 31, 24),
                     borderRadius: BorderRadius.circular(15.0),
                   ),
                   child: const Text(
@@ -98,14 +101,18 @@ class DashboardPage extends StatelessWidget {
             ),
             // DUEL Button
             Transform.rotate(
-              angle: 0.1, // Rotación en radianes
+              angle: 0.45,
               child: GestureDetector(
                 onTap: () {
-                  // Acción para el botón DUEL
-                  print("DUEL presionado");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GameScreenDuel(isDuelMode: true),
+                    ),
+                  );
                 },
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  margin: const EdgeInsets.symmetric(vertical: 25.0),
                   width: 250,
                   height: 60,
                   alignment: Alignment.center,
@@ -127,7 +134,7 @@ class DashboardPage extends StatelessWidget {
             const Spacer(),
             // Bienvenida al usuario
             Text(
-              'Bienvenido, ${user?.email}',
+              'Bienvenido, ${user?.email ?? 'No disponible'}',
               style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
@@ -140,4 +147,3 @@ class DashboardPage extends StatelessWidget {
     );
   }
 }
-

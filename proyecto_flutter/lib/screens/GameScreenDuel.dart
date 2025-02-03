@@ -3,16 +3,16 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class GameScreen extends StatefulWidget {
-  final bool isSoloMode;
+class GameScreenDuel extends StatefulWidget {
+  final bool isDuelMode;
 
-  const GameScreen({super.key, required this.isSoloMode});
+  const GameScreenDuel({super.key, required this.isDuelMode});
 
   @override
-  State<GameScreen> createState() => _GameScreenState();
+  State<GameScreenDuel> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreenDuel> {
   static const int boardSize = 9;
   static const int playerTilesCount = 7;
   int playerScore = 0;
@@ -46,7 +46,7 @@ class _GameScreenState extends State<GameScreen> {
     super.initState();
     _initializeLetterPool();
     _generateRandomTiles();
-    if (!widget.isSoloMode) {
+    if (!widget.isDuelMode) {
       _generateBotTiles();
     }
   }
@@ -325,7 +325,18 @@ Widget build(BuildContext context) {
   return Scaffold(
     backgroundColor: Colors.grey[300],
     appBar: AppBar(
-      backgroundColor: Color(0xFFF65259),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      toolbarHeight: 100,
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.red, Colors.blue],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+      ),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
