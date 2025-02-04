@@ -38,7 +38,7 @@ class _GameScreenState extends State<GameScreen> {
   bool isHorizontal = true;
   String? selectedBoardWord;
   int? selectedBoardWordStartIndex;
-  bool isPlayerTurn = true; 
+  bool isPlayerTurn = true;
   int playerDiscardsRemaining = 3;
 
   @override
@@ -63,10 +63,12 @@ class _GameScreenState extends State<GameScreen> {
     if (letterPool.isNotEmpty) {
       final neededTiles = playerTilesCount - playerTiles.length;
       final newTiles = letterPool.take(neededTiles).toList();
-      setState(() {
-        playerTiles.addAll(newTiles);
-        letterPool.removeRange(0, min(neededTiles, letterPool.length));
-      });
+      if (mounted) {
+        setState(() {
+          playerTiles.addAll(newTiles);
+          letterPool.removeRange(0, min(neededTiles, letterPool.length));
+        });
+      }
     } else {
       _showErrorMessage('No hay más letras disponibles en el pool.');
     }
@@ -76,10 +78,12 @@ class _GameScreenState extends State<GameScreen> {
     if (letterPool.isNotEmpty) {
       final neededTiles = playerTilesCount - botTiles.length;
       final newTiles = letterPool.take(neededTiles).toList();
-      setState(() {
-        botTiles.addAll(newTiles);
-        letterPool.removeRange(0, min(neededTiles, letterPool.length));
-      });
+      if (mounted) {
+        setState(() {
+          botTiles.addAll(newTiles);
+          letterPool.removeRange(0, min(neededTiles, letterPool.length));
+        });
+      }
     } else {
       _showErrorMessage('No hay más letras disponibles en el pool.');
     }
@@ -104,7 +108,7 @@ class _GameScreenState extends State<GameScreen> {
     String word = selectedTilesForWord.join();
     bool isValid = await validateWord(word);
 
-    if (isValid) {
+    if (isValid && mounted) {
       setState(() {
         draggableWord = word;
       });
@@ -115,44 +119,48 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _placeWordOnBoard(int startIndex) {
-  if (draggableWord == null) return;
+    if (draggableWord == null) return;
 
-  int wordLength = draggableWord!.length;
-  int row = startIndex ~/ boardSize;
-  int col = startIndex % boardSize;
+    int wordLength = draggableWord!.length;
+    int row = startIndex ~/ boardSize;
+    int col = startIndex % boardSize;
 
-  if (isHorizontal ? col + wordLength > boardSize : row + wordLength > boardSize) {
-    _showInvalidPlacementMessage();
-    return;
-  }
-
-  // Calcular la puntuación de la palabra
-  int wordScore = 0;
-  for (int i = 0; i < wordLength; i++) {
-    String letter = draggableWord![i];
-    wordScore += letterScores[letter] ?? 0;
-  }
-
-  setState(() {
-    for (int i = 0; i < wordLength; i++) {
-      int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
-      boardTiles[index] = draggableWord![i];
+    if (isHorizontal ? col + wordLength > boardSize : row + wordLength > boardSize) {
+      _showInvalidPlacementMessage();
+      return;
     }
-    playerScore += wordScore; // Sumar la puntuación de la palabra al total del jugador
-    draggableWord = null;
-    _updatePlayerTiles();
-    _endTurn();
-  });
-}
+
+    // Calcular la puntuación de la palabra
+    int wordScore = 0;
+    for (int i = 0; i < wordLength; i++) {
+      String letter = draggableWord![i];
+      wordScore += letterScores[letter] ?? 0;
+    }
+
+    if (mounted) {
+      setState(() {
+        for (int i = 0; i < wordLength; i++) {
+          int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
+          boardTiles[index] = draggableWord![i];
+        }
+        playerScore += wordScore; // Sumar la puntuación de la palabra al total del jugador
+        draggableWord = null;
+        _updatePlayerTiles();
+        _endTurn();
+      });
+    }
+  }
 
   void _endTurn() {
-    setState(() {
-      isPlayerTurn = !isPlayerTurn; // Cambia el turno
-      playerDiscardsRemaining = 3; // Reinicia los descartes
-      if (!isPlayerTurn) {
-        _botPlay(); // El bot juega si es su turno
-      }
-    });
+    if (mounted) {
+      setState(() {
+        isPlayerTurn = !isPlayerTurn; // Cambia el turno
+        playerDiscardsRemaining = 3; // Reinicia los descartes
+        if (!isPlayerTurn) {
+          _botPlay(); // El bot juega si es su turno
+        }
+      });
+    }
   }
 
   void _botPlay() async {
@@ -163,7 +171,7 @@ class _GameScreenState extends State<GameScreen> {
       if (boardTiles[i] == null) {
         String word = botTiles.join(); // Usa todas las letras del bot
         bool isValid = await validateWord(word);
-        if (isValid) {
+        if (isValid && mounted) {
           setState(() {
             draggableWord = word;
             _placeWordOnBoard(i);
@@ -174,11 +182,15 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     // Si no puede colocar una palabra, pasa el turno
-    _endTurn();
+    if (mounted) {
+      setState(() {
+        _endTurn();
+      });
+    }
   }
 
   void _discardSelectedTiles() {
-    if (selectedTilesForWord.isNotEmpty && playerDiscardsRemaining > 0) {
+    if (selectedTilesForWord.isNotEmpty && playerDiscardsRemaining > 0 && mounted) {
       setState(() {
         String tileToDiscard = selectedTilesForWord.last;
         letterPool.add(tileToDiscard);
@@ -194,10 +206,12 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _returnTilesToPlayer() {
-    setState(() {
-      playerTiles.addAll(selectedTilesForWord);
-      selectedTilesForWord.clear();
-    });
+    if (mounted) {
+      setState(() {
+        playerTiles.addAll(selectedTilesForWord);
+        selectedTilesForWord.clear();
+      });
+    }
   }
 
   void _showErrorMessage(String message) {
@@ -228,11 +242,13 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _updatePlayerTiles() {
-    setState(() {
-      playerTiles.removeWhere((tile) => selectedTilesForWord.contains(tile));
-      selectedTilesForWord.clear();
-      _generateRandomTiles();
-    });
+    if (mounted) {
+      setState(() {
+        playerTiles.removeWhere((tile) => selectedTilesForWord.contains(tile));
+        selectedTilesForWord.clear();
+        _generateRandomTiles();
+      });
+    }
   }
 
   void _selectWordOnBoard(int startIndex) {
@@ -244,42 +260,46 @@ class _GameScreenState extends State<GameScreen> {
     String verticalWord = _getWordInDirection(row, col, 1, 0);
 
     if (horizontalWord.length > verticalWord.length) {
-      setState(() {
-        selectedBoardWord = horizontalWord;
-        selectedBoardWordStartIndex = row * boardSize + (col - (horizontalWord.length - 1));
-        isHorizontal = true;
-      });
+      if (mounted) {
+        setState(() {
+          selectedBoardWord = horizontalWord;
+          selectedBoardWordStartIndex = row * boardSize + (col - (horizontalWord.length - 1));
+          isHorizontal = true;
+        });
+      }
     } else {
-      setState(() {
-        selectedBoardWord = verticalWord;
-        selectedBoardWordStartIndex = (row - (verticalWord.length - 1)) * boardSize + col;
-        isHorizontal = false;
-      });
+      if (mounted) {
+        setState(() {
+          selectedBoardWord = verticalWord;
+          selectedBoardWordStartIndex = (row - (verticalWord.length - 1)) * boardSize + col;
+          isHorizontal = false;
+        });
+      }
     }
   }
 
   String _getWordInDirection(int row, int col, int rowIncrement, int colIncrement) {
-  String word = '';
-  int i = 0;
-  
-  // Retrocede hasta el inicio de la palabra
-  while (row >= 0 && col >= 0 && row < boardSize && col < boardSize && boardTiles[row * boardSize + col] != null) {
-    row -= rowIncrement;
-    col -= colIncrement;
-  }
+    String word = '';
+    int i = 0;
 
-  // Avanza y construye la palabra
-  row += rowIncrement;
-  col += colIncrement;
-  
-  while (row >= 0 && col >= 0 && row < boardSize && col < boardSize && boardTiles[row * boardSize + col] != null) {
-    word += boardTiles[row * boardSize + col]!;
+    // Retrocede hasta el inicio de la palabra
+    while (row >= 0 && col >= 0 && row < boardSize && col < boardSize && boardTiles[row * boardSize + col] != null) {
+      row -= rowIncrement;
+      col -= colIncrement;
+    }
+
+    // Avanza y construye la palabra
     row += rowIncrement;
     col += colIncrement;
-  }
 
-  return word;
-}
+    while (row >= 0 && col >= 0 && row < boardSize && col < boardSize && boardTiles[row * boardSize + col] != null) {
+      word += boardTiles[row * boardSize + col]!;
+      row += rowIncrement;
+      col += colIncrement;
+    }
+
+    return word;
+  }
 
   Future<void> _extendWordOnBoard({bool extendForward = true}) async {
     if (selectedBoardWord == null || selectedBoardWordStartIndex == null || selectedTilesForWord.isEmpty) {
@@ -309,65 +329,67 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
 
-    setState(() {
-      for (int i = 0; i < wordLength; i++) {
-        int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
-        boardTiles[index] = newWord[i];
-      }
-      selectedBoardWord = null;
-      selectedBoardWordStartIndex = null;
-      _updatePlayerTiles();
-    });
+    if (mounted) {
+      setState(() {
+        for (int i = 0; i < wordLength; i++) {
+          int index = isHorizontal ? startIndex + i : startIndex + (i * boardSize);
+          boardTiles[index] = newWord[i];
+        }
+        selectedBoardWord = null;
+        selectedBoardWordStartIndex = null;
+        _updatePlayerTiles();
+      });
+    }
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.grey[300],
-    appBar: AppBar(
-      backgroundColor: Color(0xFFF65259),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              color: Colors.red,
-              size: 30,
-            ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                isPlayerTurn ? 'Tu turno' : 'Turno del bot',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[300],
+      appBar: AppBar(
+        backgroundColor: Color(0xFFF65259),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                color: Colors.red,
+                size: 30,
               ),
-              Text(
-                'Puntuación: $playerScore',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-          const CircleAvatar(
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              color: Colors.blue,
-              size: 30,
             ),
-          ),
-        ],
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isPlayerTurn ? 'Tu turno' : 'Turno del bot',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Puntuación: $playerScore',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                color: Colors.blue,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
       body: Column(
         children: [
           const SizedBox(height: 20),
